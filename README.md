@@ -11,3 +11,4 @@ Este repositorio contiene un plugin que muestra los productos de WooCommerce con
 - Sustituye la plantilla de página de producto por una maquetación similar a Viator.
 - Estilos modernos incluidos (gradientes, tarjetas, rejillas responsivas).
 - Aprovecha funciones nativas de WooCommerce: galería, rating, precio, botón de compra y atributos.
+- Campos editables en el editor de producto para personalizar titular, destacados y garantías específicas.

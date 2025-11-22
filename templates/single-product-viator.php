@@ -9,6 +9,13 @@ defined( 'ABSPATH' ) || exit;
 
 global $product;
 
+$tagline     = get_post_meta( get_the_ID(), '_viator_tagline', true );
+$highlights  = get_post_meta( get_the_ID(), '_viator_highlights', true );
+$guarantees  = get_post_meta( get_the_ID(), '_viator_guarantees', true );
+
+$highlights_list = array_filter( array_map( 'trim', explode( "\n", (string) $highlights ) ) );
+$guarantees_list = array_filter( array_map( 'trim', explode( "\n", (string) $guarantees ) ) );
+
 get_header( 'shop' );
 ?>
 <div class="viator-product-shell">
@@ -38,7 +45,13 @@ get_header( 'shop' );
                     </div>
 
                     <div class="viator-product__tagline">
-                        <?php echo wp_kses_post( wp_trim_words( $product->get_short_description(), 40 ) ); ?>
+                        <?php
+                        if ( ! empty( $tagline ) ) {
+                            echo esc_html( $tagline );
+                        } else {
+                            echo wp_kses_post( wp_trim_words( $product->get_short_description(), 40 ) );
+                        }
+                        ?>
                     </div>
 
                     <div class="viator-product__price">
@@ -50,9 +63,15 @@ get_header( 'shop' );
                     </div>
 
                     <ul class="viator-product__guarantees">
-                        <li>✓ Reserva ahora y paga después</li>
-                        <li>✓ Cancelación gratuita disponible</li>
-                        <li>✓ Productos verificados</li>
+                        <?php if ( ! empty( $guarantees_list ) ) : ?>
+                            <?php foreach ( $guarantees_list as $item ) : ?>
+                                <li>✓ <?php echo esc_html( $item ); ?></li>
+                            <?php endforeach; ?>
+                        <?php else : ?>
+                            <li>✓ <?php esc_html_e( 'Reserva ahora y paga después', 'viator-product-template' ); ?></li>
+                            <li>✓ <?php esc_html_e( 'Cancelación gratuita disponible', 'viator-product-template' ); ?></li>
+                            <li>✓ <?php esc_html_e( 'Productos verificados', 'viator-product-template' ); ?></li>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>
@@ -60,7 +79,15 @@ get_header( 'shop' );
             <div class="viator-product__content">
                 <section class="viator-product__section viator-product__highlights">
                     <h2><?php esc_html_e( 'Destacados', 'viator-product-template' ); ?></h2>
-                    <?php echo apply_filters( 'the_content', $product->get_short_description() ); ?>
+                    <?php if ( ! empty( $highlights_list ) ) : ?>
+                        <ul>
+                            <?php foreach ( $highlights_list as $highlight ) : ?>
+                                <li><?php echo esc_html( $highlight ); ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else : ?>
+                        <?php echo apply_filters( 'the_content', $product->get_short_description() ); ?>
+                    <?php endif; ?>
                 </section>
 
                 <div class="viator-product__details-grid">
